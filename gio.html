@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Claim your Gift card</title>
+      <!-- Font Awesome for icons -->
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      />
+      <style>
+        /* === CSS STYLES === */
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #000;
+          margin: 0;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          text-align: center;
+          color: white;
+        }
+
+        .profile-section {
+          margin-bottom: 30px;
+        }
+
+        .profile-pic {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          object-fit: cover;
+          margin-bottom: 15px;
+          border: 3px solid #fff;
+        }
+
+        .links {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          width: 100%;
+          max-width: 400px;
+          margin-bottom: 30px;
+        }
+
+        /* WHITE BUTTON STYLES */
+        .link-btn {
+          display: flex;
+          align-items: center;
+          padding: 10px;
+          background: white;
+          color: black;
+          text-decoration: none;
+          border-radius: 50px;
+          transition: all 0.2s ease;
+          font-weight: bold;
+          border: 1px solid #ddd;
+          text-align: left;
+          margin-bottom: 6px;
+        }
+
+        .link-btn:hover {
+          background: #f0f0f0;
+          transform: translateY(-2px);
+        }
+
+        .link-icon {
+          width: 40px;
+          height: 40px;
+          margin-right: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .custom-icon {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 25px;
+        }
+
+        .link-text {
+          flex-grow: 1;
+        }
+
+        .link-subtext {
+          font-size: 12px;
+          color: #666;
+          font-weight: normal;
+          display: block;
+          margin-top: 2px;
+        }
+
+        /* INSTRUCTIONS BOX STYLES */
+        .instructions-box {
+          background-color: #171717;
+          padding: 24px;
+          border-radius: 20px;
+          width: 100%;
+          max-width: 400px;
+          border: 1px solid #333;
+          margin-top: 22px;
+        }
+
+        .instructions-title {
+          text-align: center;
+          font-weight: bold;
+          margin-bottom: 16px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: #a3a3a3;
+          font-size: 14px;
+        }
+
+        .instructions-list {
+          color: #e5e5e5;
+          text-align: left;
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+
+        .instructions-list li {
+          margin-bottom: 12px;
+          padding-left: 5px;
+        }
+
+        .instructions-list li:last-child {
+          margin-bottom: 0;
+        }
+      </style>
+    </head>
+    <body>
+      <!-- heading and sub heading -->
+      <div class="profile-section">
+        <img
+          src="img/cashapp-profile-img.png"
+          alt="Profile"
+          class="profile-pic"
+        />
+        <h1>Claim Your Gift Card Now!</h1>
+        <p>More deals you do, more you earn↓</p>
+      </div>
+
+      <!-- Link Buttons -->
+      <div class="links">
+        <!-- Cash App Button -->
+        <a href="https://smrturl.co/a/sf3d92e96ec/663?s1=mamun" class="link-btn">
+          <div class="link-icon">
+            <img src="img/Cash-App-Logo.png" class="custom-icon" alt="Cash App" />
+          </div>
+          <div class="link-text">
+            Claim $750 Via Cashapp
+            <span class="link-subtext">(Copy code after the survey)</span>
+          </div>
+        </a>
+        <!-- 7eleven Button -->
+        <a href="https://example.com" class="link-btn">
+          <div class="link-icon">
+            <img
+              src="img/7-eleven-logo.png"
+              class="custom-icon"
+              alt="Cash App"
+            />
+          </div>
+          <div class="link-text">
+            Claim $750 Via Cashapp
+            <span class="link-subtext">(Copy code after the survey)</span>
+          </div>
+        </a>
+        <!-- paypal Button -->
+        <a href="https://smrturl.co/a/sf3d92e96ec/576?s1=mamun" class="link-btn">
+          <div class="link-icon">
+            <img
+              src="img/PayPal-Logo-PNG.png"
+              class="custom-icon"
+              alt="Cash App"
+            />
+          </div>
+          <div class="link-text">
+            Claim $750 Via Cashapp
+            <span class="link-subtext">(Copy code after the survey)</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- INSTRUCTIONS BOX -->
+      <div class="instructions-box">
+        <h2 class="instructions-title">Instructions</h2>
+        <ul class="instructions-list">
+          <li>1. Click the link ✨</li>
+          <li>2. Enter your email & basic info ✍️</li>
+          <li>3. Complete recommended deals ✅</li>
+          <li>4. Claim your reward! 🎁</li>
+        </ul>
+      </div>
+
+      <!-- Geo-Targeting Script -->
+      <script>
+        function handleCountryRedirect() {
+          // Add at start of handleCountryRedirect()
+const testCountry = new URLSearchParams(window.location.search).get('testcountry');
+if (testCountry) {
+  const offerUrl = countryOffers[testCountry] || countryOffers['DEFAULT'];
+  if (offerUrl) window.location.href = offerUrl;
+  return;
+}// Your ipinfo.io API token
+          const IPINFO_TOKEN = 'ea81561c76be4b';
+          
+          // Configure country-specific offers
+          const countryOffers = {
+            'US': null,        // United States - show current page
+            'GB': 'https://bing.com',      // United Kingdom
+            'CA': 'https://youtube.com',  // Canada
+            'AU': 'https://yahoo.com', // Australia
+            'bd': 'https://facebook.com',
+            // Add more countries as needed
+            'DEFAULT': 'https://google.com'  // Fallback for other countries
+          };
+
+          // Detect visitor's country
+          fetch(`https://ipinfo.io/json?token=${IPINFO_TOKEN}`)
+            .then(response => {
+              if (!response.ok) throw new Error("API Error");
+              return response.json();
+            })
+            .then(data => {
+              const countryCode = data.country || 'US';
+              const offerUrl = countryOffers[countryCode] || countryOffers['DEFAULT'];
+              
+              // Redirect if needed
+              if (offerUrl) {
+                // Show loading message
+                document.body.innerHTML = `
+                  <div style="color:white; text-align:center; padding:50px;">
+                    Loading your local offer...
+                  </div>
+                `;
+                window.location.href = offerUrl;
+              }
+            })
+            .catch(error => {
+              console.log("Geo-detection failed, keeping US version");
+              // Optional: Uncomment to redirect to default if detection fails
+              // window.location.href = countryOffers['DEFAULT'];
+            });
+        }
+
+        // Run when page loads
+        window.addEventListener('DOMContentLoaded', handleCountryRedirect);
+      </script>
+    </body>
+  </html>
