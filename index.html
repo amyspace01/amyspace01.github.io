@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cash App Rewards</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .flex {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-top: 15%;
+
+        }
+        
+        body {
+            background-color: #00D632; /* Cash App green */
+            color: white;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .logo {
+            text-align: center;
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 24px;
+            letter-spacing: -0.5px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            color: #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            font-weight: 700;
+            color: black;
+        }
+        
+        .highlight {
+            color: #00D632;
+            font-weight: bold;
+        }
+        
+        .divider {
+            height: 1px;
+            background: #eee;
+            margin: 25px 0;
+        }
+        
+        .benefit {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .benefit-badge {
+            background: #00D632;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .button {
+            display: block;
+            background: #00D632;
+            color: white;
+            text-align: center;
+            padding: 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 30px 0;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .button:hover {
+            transform: scale(1.02);
+        }
+        
+        .countdown {
+            background: rgba(0,0,0,0.05);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 25px 0;
+            font-weight: bold;
+        }
+        
+        .small-text {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            margin-top: 30px;
+            line-height: 1.6;
+        }
+        
+        .floating-cash {
+            position: absolute;
+            right: 20px;
+            top: 100px;
+            font-size: 40px;
+            transform: rotate(15deg);
+            opacity: 0.1;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex">
+    <div class="floating-cash">$</div>
+    
+    <div class="container">
+        <div class="logo">Cash App</div>
+        
+        <div class="card">
+            <h1>Get <span class="highlight">$750</span> Cash Bonus</h1>
+            <p>You've been selected for a limited-time Cash App promotion. Complete your registration to claim your free money.</p>
+            
+            <div class="divider"></div>
+            
+            <div class="benefit">
+                <div class="benefit-badge">1</div>
+                <div>Instant $750 cash bonus</div>
+            </div>
+            
+            <div class="benefit">
+                <div class="benefit-badge">2</div>
+                <div>Direct deposit to your account</div>
+            </div>
+            
+            <div class="benefit">
+                <div class="benefit-badge">3</div>
+                <div>No fees or credit checks</div>
+            </div>
+            
+            <div class="countdown">
+                ⏳ Limited time: <span id="timer">23:59:59</span> remaining
+            </div>
+            
+            <a href="https://smrturl.co/a/sf3d92e96ec/11788?s1=" class="button">CLAIM YOUR $750</a>
+            
+            <p class="small-text">
+                *This is not an official Cash App promotion. By clicking, you agree to our terms. 
+                Must be 18+ to participate. Limited availability.
+            </p>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        // Countdown timer
+        function updateTimer() {
+            let hours = 23 - new Date().getHours();
+            let minutes = 59 - new Date().getMinutes();
+            let seconds = 59 - new Date().getSeconds();
+            
+            document.getElementById('timer').innerText = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        updateTimer();
+        setInterval(updateTimer, 1000);
+        
+        // Floating dollar sign animation
+        const cash = document.querySelector('.floating-cash');
+        let angle = 15;
+        setInterval(() => {
+            angle = angle > 345 ? 15 : angle + 5;
+            cash.style.transform = `rotate(${angle}deg)`;
+        }, 300);
+    </script>
+</body>
+</html>
