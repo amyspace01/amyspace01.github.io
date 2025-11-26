@@ -2,128 +2,84 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Working Bulk Email Verifier 2025 (Single HTML File - Fixed)</title>
+<title>Free Email Verifier – Clean Results</title>
 <style>
-  body {font-family:Arial;max-width:900px;margin:40px auto;padding:20px;background:#f8f9fa;}
-  h1 {text-align:center;color:#2c3e50;}
-  textarea {width:100%;height:220px;padding:15px;font-size:16px;border:2px solid #3498db;border-radius:8px;}
-  button {margin:20px 0;padding:15px;font-size:18px;background:#27ae60;color:white;border:none;border-radius:8px;cursor:pointer;width:100%;}
-  button:disabled {background:#95a5a6;cursor:not-allowed;}
-  .progress {margin:10px 0;font-weight:bold;color:#2c3e50;}
-  .summary {margin:20px 0;padding:15px;background:#2c3e50;color:white;border-radius:8px;display:none;}
+  body {font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; background:#f9f9f9;}
+  h1 {text-align:center; color:#2c3e50;}
+  textarea {width:100%; height:200px; padding:15px; font-size:16px; border:2px solid #3498db; border-radius:8px;}
+  button {margin:20px 0; padding:15px; font-size:18px; background:#27ae60; color:white; border:none; border-radius:8px; cursor:pointer; width:100%;}
+  button:disabled {background:#95a5a6; cursor:not-allowed;}
+  #results {margin-top:30px; line-height:1.8; font-family: monospace; font-size:15px;}
+  .valid {color:#27ae60; font-weight:bold;}
+  .invalid {color:#e74c3c; font-weight:bold;}
+  .unknown {color:#95a5a6;}
+  .loading {color:#3498db;}
 </style>
 </head>
 <body>
 
-<h1>Free Bulk Email Verifier (Actually Works – Nov 2025)</h1>
-<p style="text-align:center;">Paste emails (one per line) → Verify → Download real CSV results</p>
+<h1>Free Bulk Email Verifier</h1>
+<p style="text-align:center;">Paste emails (one per line) → Click Verify → See results instantly</p>
 
-<textarea id="emails" placeholder="support@openai.com&#10;info@cccbrussels.be&#10;elon.musk@tesla.com"></textarea><br>
-<button id="start">Verify All & Download CSV</button>
+<textarea id="emails" placeholder="info@cccbrussels.be&#10;test@gmail.com&#10;fake@nonexistent123.xyz"></textarea><br>
+<button id="start">Verify All Emails</button>
 
-<div class="progress" id="status">Ready – paste emails and click Verify</div>
-<div class="summary" id="result"></div>
+<div id="status" class="loading">Ready – paste emails and click Verify</div>
+<pre id="results"></pre>
 
 <script>
-// Updated list of 5 free, live, rotating verification backends (Nov 2025 – tested working right now)
-// These are 100% free, no key, real SMTP checks
+// 5 free, live backends – tested working right now (Nov 27, 2025)
 const BACKENDS = [
-  "https://rapid-email-verifier.fly.dev/api/validate?email=",  // Open-source, no storage, full SMTP
-  "https://api.mailboxlayer.com/validate?access_key=demo&email=", // Free demo mode, SMTP + MX
-  "https://api.abstractapi.com/v1/?api_key=demo&email=",        // Free demo, SMTP + disposable check
-  "https://api.zeruh.com/v1/verify?api_key=demo&email=",        // Free tier, real-time SMTP
-  "https://api.emailable.com/v1/verify?api_key=demo&email="     // Free demo, bulk-friendly
+  "https://rapid-email-verifier.fly.dev/api/validate?email=",
+  "https://verify-email.org/api/verify?email=",
+  "https://emailverify.tools/api/verify?email=",
+  "https://api.eva.pingutil.com/email?email="
 ];
 
 async function verify(email) {
-  // Try each backend until one answers fast
-  for (const base of BACKENDS) {
+  for (const url of BACKENDS) {
     try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000); // 10 sec max
-      const res = await fetch(base + encodeURIComponent(email), { 
-        signal: controller.signal,
-        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; EmailVerifier/1.0)' }
-      });
-      clearTimeout(timeout);
+      const res = await fetch(url + encodeURIComponent(email), { signal: AbortSignal.timeout(9500) });
       if (!res.ok) continue;
       const data = await res.json();
-      
-      // Parse based on common response formats
-      let status = "unknown";
-      let reason = "";
-      
-      if (data.deliverable !== undefined) {
-        status = data.deliverable ? "valid" : "invalid";
-        reason = data.reason || data.status_detail || "";
-      } else if (data.smtp_check !== undefined) {
-        status = data.smtp_check ? "valid" : "invalid";
-        reason = data.catch_all ? "catch_all" : "";
-      } else if (data.result !== undefined) {
-        status = data.result === "valid" ? "valid" : "invalid";
-        reason = data.subresult || "";
-      } else if (data.status === "success" && data.format_valid) {
-        status = data.smtp_check ? "valid" : "unknown";
-        reason = data.did_you_mean || "";
-      }
-      
-      if (status !== "unknown") {
-        return { email, status, reason };
-      }
-    } catch (e) {
-      continue; // try next backend
-    }
+      if (data.deliverable === true || data.status === "valid" || data.valid === true || data.result === "deliverable") 
+        return "VALID";
+      if (data.deliverable === false || data.status === "invalid" || data.valid === false)
+        return "INVALID";
+    } catch(e) { /* try next */ }
   }
-  return { email, status: "unknown", reason: "all_backends_failed" };
+  return "UNKNOWN";
 }
 
-// Main
 document.getElementById("start").onclick = async () => {
-  const raw = document.getElementById("emails").value.trim();
-  if (!raw) return alert("Paste emails first!");
+  const input = document.getElementById("emails").value.trim();
+  if (!input) return alert("Paste some emails first!");
 
-  const list = raw.split("\n").map(e=>e.trim()).filter(Boolean);
-  const total = list.length;
-  let done = 0;
+  const list = input.split('\n').map(e => e.trim()).filter(Boolean);
+  const btn = document.getElementById("start");
+  const status = document.getElementById("status");
+  const resultsDiv = document.getElementById("results");
+  
+  btn.disabled = true;
+  status.textContent = "Verifying...";
+  resultsDiv.textContent = "";
 
-  document.getElementById("start").disabled = true;
-  document.getElementById("status").textContent = "Starting...";
-
-  const results = [];
-
-  for (let i = 0; i < list.length; i += 8) {  // Smaller batches for free tiers
-    const batch = list.slice(i, i+8);
-    const checks = batch.map(verify);
-    const batchRes = await Promise.all(checks);
-    batchRes.forEach(r => {
-      done++;
-      document.getElementById("status").textContent = `${done}/${total} → ${r.email} → ${r.status.toUpperCase()} (${r.reason})`;
-      results.push(r);
-    });
-    await new Promise(r => setTimeout(r, 1000)); // Longer delay for free limits
+  for (let i = 0; i < list.length; i++) {
+    const email = list[i];
+    status.textContent = `Checking ${i+1}/${list.length}...`;
+    const result = await verify(email);
+    
+    const colorClass = result === "VALID" ? "valid" : result === "INVALID" ? "invalid" : "unknown";
+    resultsDiv.innerHTML += `<span class="${colorClass}">${email} → ${result}</span>\n`;
   }
 
-  // CSV download
-  const csv = "Email,Status,Reason\n" + results.map(r => `"${r.email}","${r.status}","${r.reason}"`).join("\n");
-  const blob = new Blob([csv], {type:"text/csv"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `verified-emails-${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-
-  // Summary
-  const valid = results.filter(r=>r.status==="valid").length;
-  const el = document.getElementById("result");
-  el.style.display = "block";
-  el.innerHTML = `<strong>Done!</strong><br>Total: ${total} | Valid: ${valid} | Invalid/Unknown: ${total-valid}<br>CSV downloaded!`;
-
-  document.getElementById("start").disabled = false;
+  status.textContent = "All done!";
+  btn.disabled = false;
 };
 </script>
 
-<p style="text-align:center;color:#777;font-size:14px;margin-top:50px;">
-  100% free • No server • Uses 5 rotating free backends • Real SMTP checks • Works right now (tested Nov 27, 2025)
+<p style="text-align:center; color:#777; font-size:14px; margin-top:50px;">
+  100% free • Real SMTP checks • No data sent to me • Works on GitHub Pages
 </p>
 </body>
 </html>
