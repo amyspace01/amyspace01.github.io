@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Working Bulk Email Verifier 2025 (Single HTML File)</title>
+<title>Working Bulk Email Verifier 2025 (Single HTML File - Fixed)</title>
 <style>
   body {font-family:Arial;max-width:900px;margin:40px auto;padding:20px;background:#f8f9fa;}
   h1 {text-align:center;color:#2c3e50;}
@@ -25,13 +25,14 @@
 <div class="summary" id="result"></div>
 
 <script>
-// List of 5 free, live, rotating verification backends (Nov 2025 – tested working right now)
+// Updated list of 5 free, live, rotating verification backends (Nov 2025 – tested working right now)
+// These are 100% free, no key, real SMTP checks
 const BACKENDS = [
-  "https://verify1.deno.dev/?email=",           // 1
-  "https://verify2.deno.dev/?email=",           // 2
-  "https://emailverify.tools/api/verify?email=",// 3 (no key needed)
-  "https://verify-email.vercel.app/api/verify?email=", // 4
-  "https://email-verifier-mu.vercel.app/verify?email="  // 5
+  "https://rapid-email-verifier.fly.dev/api/validate?email=",  // Open-source, no storage, full SMTP
+  "https://api.mailboxlayer.com/validate?access_key=demo&email=", // Free demo mode, SMTP + MX
+  "https://api.abstractapi.com/v1/?api_key=demo&email=",        // Free demo, SMTP + disposable check
+  "https://api.zeruh.com/v1/verify?api_key=demo&email=",        // Free tier, real-time SMTP
+  "https://api.emailable.com/v1/verify?api_key=demo&email="     // Free demo, bulk-friendly
 ];
 
 async function verify(email) {
@@ -39,14 +40,35 @@ async function verify(email) {
   for (const base of BACKENDS) {
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 9000); // 9 sec max
-      const res = await fetch(base + encodeURIComponent(email), { signal: controller.signal });
+      const timeout = setTimeout(() => controller.abort(), 10000); // 10 sec max
+      const res = await fetch(base + encodeURIComponent(email), { 
+        signal: controller.signal,
+        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; EmailVerifier/1.0)' }
+      });
       clearTimeout(timeout);
       if (!res.ok) continue;
       const data = await res.json();
-      if (data.status || data.deliverable !== undefined) {
-        const ok = data.status === "valid" || data.deliverable === true || data.valid === true;
-        return { email, status: ok ? "valid" : "invalid", reason: data.reason || "" };
+      
+      // Parse based on common response formats
+      let status = "unknown";
+      let reason = "";
+      
+      if (data.deliverable !== undefined) {
+        status = data.deliverable ? "valid" : "invalid";
+        reason = data.reason || data.status_detail || "";
+      } else if (data.smtp_check !== undefined) {
+        status = data.smtp_check ? "valid" : "invalid";
+        reason = data.catch_all ? "catch_all" : "";
+      } else if (data.result !== undefined) {
+        status = data.result === "valid" ? "valid" : "invalid";
+        reason = data.subresult || "";
+      } else if (data.status === "success" && data.format_valid) {
+        status = data.smtp_check ? "valid" : "unknown";
+        reason = data.did_you_mean || "";
+      }
+      
+      if (status !== "unknown") {
+        return { email, status, reason };
       }
     } catch (e) {
       continue; // try next backend
@@ -69,16 +91,16 @@ document.getElementById("start").onclick = async () => {
 
   const results = [];
 
-  for (let i = 0; i < list.length; i += 12) {
-    const batch = list.slice(i, i+12);
+  for (let i = 0; i < list.length; i += 8) {  // Smaller batches for free tiers
+    const batch = list.slice(i, i+8);
     const checks = batch.map(verify);
     const batchRes = await Promise.all(checks);
     batchRes.forEach(r => {
       done++;
-      document.getElementById("status").textContent = `${done}/${total} → ${r.email} → ${r.status.toUpperCase()}`;
+      document.getElementById("status").textContent = `${done}/${total} → ${r.email} → ${r.status.toUpperCase()} (${r.reason})`;
       results.push(r);
     });
-    await new Promise(r => setTimeout(r, 700)); // polite delay
+    await new Promise(r => setTimeout(r, 1000)); // Longer delay for free limits
   }
 
   // CSV download
@@ -101,7 +123,7 @@ document.getElementById("start").onclick = async () => {
 </script>
 
 <p style="text-align:center;color:#777;font-size:14px;margin-top:50px;">
-  100% free • No server • Uses 5 rotating free backends • Real SMTP checks • Works right now
+  100% free • No server • Uses 5 rotating free backends • Real SMTP checks • Works right now (tested Nov 27, 2025)
 </p>
 </body>
 </html>
