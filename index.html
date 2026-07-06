@@ -6,7 +6,137 @@
     <title>icast Elite | Premium Podcast & Music Promotion Agency</title>
     <!-- Include Lucide CDN for beautiful iconography -->
     <script src="https://cdn.jsdelivr.net/npm/lucide@0.456.0/dist/umd/lucide.min.js"></script>
-    <link rel="stylesheet" href="/index.css" />
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                orange: '#FF6B35',
+                'orange-soft': '#FF8C42',
+                navy: '#1E2937',
+                gray: '#475569',
+                border: '#e2e8f0',
+                card: '#f8fafc'
+              }
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif']
+            }
+          }
+        }
+      }
+    </script>
+    
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+      /* Custom styles for smooth scrolling and clean focus outlines */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #fafafa;
+        color: #1E2937;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* Highlight style for the specific logo class requested */
+      .icast-logo {
+        font-family: 'Inter', sans-serif;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+      }
+
+      /* Glass Card styling from design theme */
+      .glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid #e2e8f0;
+      }
+
+      /* Service Card hover states from clean minimal theme */
+      .service-card-minimal {
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .service-card-minimal:hover {
+        border-color: #FF6B35;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px -10px rgba(30, 41, 55, 0.08);
+      }
+
+      /* Keyframe Animations for high fidelity Framer Motion effects */
+      @keyframes wavePulse {
+        0%, 100% {
+          transform: scaleY(1);
+        }
+        50% {
+          transform: scaleY(0.15);
+        }
+      }
+      .animate-wave-pulse {
+        animation: wavePulse 1.4s ease-in-out infinite;
+        transform-origin: bottom;
+      }
+
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+      .animate-float {
+        animation: float 4s ease-in-out infinite;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      .animate-fadeIn {
+        animation: fadeIn 0.6s ease-out forwards;
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(16px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .animate-slideUp {
+        animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      @keyframes scaleIn {
+        from {
+          transform: scale(0.97);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .animate-scaleIn {
+        animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      /* Navigation highlights indicator design */
+      .nav-indicator {
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+    </style>
   </head>
   <body class="min-h-screen bg-white text-brand-gray antialiased flex flex-col selection:bg-brand-orange/10 selection:text-brand-orange">
 
